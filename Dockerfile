@@ -1,26 +1,26 @@
-From node:23-alpine AS base
-ENV PNPM_HOME="/pnpm"
-ENV PATH="$PNPM_HOME:$PATH"
+# Base image
+FROM node:20-alpine
 
-FROM base AS build
-WORKDIR /app
-COPY . /app
-
-RUN corepack enable
-RUN apk add --no-cache python3 alpine-sdk
-
-# ❌ REMOVE the BuildKit cache mount
-RUN pnpm install --prod --frozen-lockfile
-
-RUN pnpm deploy --filter=@imput/cobalt-api --prod /prod/api
-
-FROM base AS api
+# Set working directory inside the container
 WORKDIR /app
 
-COPY --from=build --chown=node:node /prod/api /app
-# COPY --from=build --chown=node:node /app/.git /app/.git
+# Install pnpm globally
+RUN npm install -g pnpm
 
-USER node
+# Copy only package files first for caching
+COPY api/src/pnpm-lock.yaml api/src/package.json ./
 
+# Install dependencies
+RUN pnpm install
+
+# Copy the rest of the source code
+COPY api/src .
+
+# Add a default API_URL for local dev, can be overridden by Docker env
+ENV API_URL=http://localhost:9000/
+
+# Expose the port if needed (adjust if needed)
 EXPOSE 9000
-CMD [ "node", "src/cobalt" ]
+
+# Start the app
+CMD ["pnpm", "start"]
