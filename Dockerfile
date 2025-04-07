@@ -1,26 +1,21 @@
-# Base image
 FROM node:20-alpine
 
-# Set working directory inside the container
 WORKDIR /app
 
-# Install pnpm globally
+# نصب pnpm
 RUN npm install -g pnpm
 
-# Copy only package files first for caching
-COPY pnpm-lock.yaml api/src/package.json ./
+# کپی کل پروژه (نه فقط api/src)
+COPY . .
 
-# Install dependencies
+# رفتن به پوشه مربوط به api
+WORKDIR /app/api
+
+# نصب وابستگی‌ها
 RUN pnpm install
 
-# Copy the rest of the source code
-COPY api/src .
-
-# Add a default API_URL for local dev, can be overridden by Docker env
+# ست کردن ENV پیش‌فرض
 ENV API_URL=http://localhost:9000/
 
-# Expose the port if needed (adjust if needed)
-EXPOSE 9000
-
-# Start the app
+# اجرای برنامه
 CMD ["pnpm", "start"]
