@@ -49,7 +49,6 @@ export const runAPI = async (express, app, __dirname, isPrimary = true) => {
                 return friendlyServiceName(e);
             }),
         },
-        git,
     })
 
     const handleRateExceeded = (_, res) => {
@@ -351,9 +350,6 @@ export const runAPI = async (express, app, __dirname, isPrimary = true) => {
 
                 "~~~~~~\n" +
                 Bright("version: ") + 2 + "\n" +
-                Bright("commit: ") + git.commit + "\n" +
-                Bright("branch: ") + git.branch + "\n" +
-                Bright("remote: ") + git.remote + "\n" +
                 Bright("start time: ") + startTime.toUTCString() + "\n" +
                 "~~~~~~\n" +
 
