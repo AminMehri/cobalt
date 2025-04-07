@@ -1,9 +1,6 @@
 import { Constants } from "youtubei.js";
-import { getVersion } from "@imput/version-info";
 import { services } from "./processing/service-config.js";
 import { supportsReusePort } from "./misc/cluster.js";
-
-const version = await getVersion();
 
 const disabledServices = process.env.DISABLED_SERVICES?.split(',') || [];
 const enabledServices = new Set(Object.keys(services).filter(e => {
