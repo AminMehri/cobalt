@@ -10,7 +10,7 @@ RUN corepack enable
 RUN apk add --no-cache python3 alpine-sdk
 
 # ❌ REMOVE the BuildKit cache mount
-RUN pnpm install --prod --frozen-lockfile
+RUN pnpm install --no-frozen-lockfile
 
 RUN pnpm deploy --filter=@imput/cobalt-api --prod /prod/api
 
