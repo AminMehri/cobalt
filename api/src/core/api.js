@@ -2,7 +2,6 @@ import cors from "cors";
 import http from "node:http";
 import rateLimit from "express-rate-limit";
 import { setGlobalDispatcher, ProxyAgent } from "undici";
-import { getCommit, getBranch, getRemote, getVersion } from "@imput/version-info";
 
 import jwt from "../security/jwt.js";
 import stream from "../stream/stream.js";
@@ -23,14 +22,6 @@ import * as APIKeys from "../security/api-keys.js";
 import * as Cookies from "../processing/cookie/manager.js";
 import * as YouTubeSession from "../processing/helpers/youtube-session.js";
 
-const git = {
-    branch: await getBranch(),
-    commit: await getCommit(),
-    remote: await getRemote(),
-}
-
-const version = await getVersion();
-
 const acceptRegex = /^application\/json(; charset=utf-8)?$/;
 
 const corsConfig = env.corsWildcard ? {} : {
@@ -49,7 +40,7 @@ export const runAPI = async (express, app, __dirname, isPrimary = true) => {
 
     const serverInfo = JSON.stringify({
         cobalt: {
-            version: version,
+            version: 2,
             url: env.apiURL,
             startTime: `${startTimestamp}`,
             durationLimit: env.durationLimit,
@@ -359,7 +350,7 @@ export const runAPI = async (express, app, __dirname, isPrimary = true) => {
                 Bright(Cyan("cobalt ")) + Bright("API ^ω^") + "\n" +
 
                 "~~~~~~\n" +
-                Bright("version: ") + version + "\n" +
+                Bright("version: ") + 2 + "\n" +
                 Bright("commit: ") + git.commit + "\n" +
                 Bright("branch: ") + git.branch + "\n" +
                 Bright("remote: ") + git.remote + "\n" +
